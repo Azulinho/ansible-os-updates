@@ -36,17 +36,17 @@ Vagrant.configure(2) do |config|
           vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
           vb.customize ["storagectl",  :id, "--name", "IDE Controller", "--hostiocache", "on"]
         end
-
-        machine.ssh.insert_key = false
-        machine.ssh.private_key_path = ["~/.ssh/id_rsa", "~/.vagrant.d/insecure_private_key"]
-        machine.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/authorized_keys"
       end
   end
 
   config.vm.provision :ansible do |ansible|
     ansible_raw_arguments = ''
     ansible.playbook = "site.yml"
-    ansible.limit = "all"
+    if defined? ENV['LIMIT']
+      ansible.limit= ENV['LIMIT']
+    else
+      ansible.limit = "all"
+    end
     ansible.sudo = true
     ansible.raw_arguments = ["-f", "5"]
 
