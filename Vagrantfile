@@ -11,10 +11,10 @@ Vagrant.configure(2) do |config|
   # https://docs.vagrantup.com.
 
   machines = [
-    { 'name' => 'centos7',
+    { 'name' => 'centos7-os-updates',
       'url' => 'https://github.com/holms/vagrant-centos7-box/releases/download/7.1.1503.001/CentOS-7.1.1503-x86_64-netboot.box',
       'ip' =>  '192.168.33.96' },
-    { 'name' => 'suse12',
+    { 'name' => 'suse12-os-updates',
       'url' => 'https://atlas.hashicorp.com/elastic/boxes/sles-12-x86_64/versions/0.1.1/providers/virtualbox.box',
       'ip' =>  '192.168.33.97' }]
 
@@ -38,6 +38,8 @@ Vagrant.configure(2) do |config|
         end
       end
   end
+
+  config.vm.provision :shell, inline: 'rm -f /etc/udev/rules.d/70-persistent-net.rules'
 
   config.vm.provision :ansible do |ansible|
     ansible_raw_arguments = ''
